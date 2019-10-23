@@ -1,0 +1,5 @@
+The vulnerability in this section was there was an unsafe use of strcat.
+There was no length checking for the password and it was passed into the strcat as is, and a buffer overflow occured.
+Using this we could just input a long password to overwrite the ra and crash the program.
+We used an informative input so we would understand where the ra is by reading the esp.
+This caused a segmentation fault.

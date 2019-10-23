@@ -1,0 +1,14 @@
+After crashing the program and creating a core file, we read it using gdb.
+We crashed the program with an easy to identify input, this way we can identify the addresses pf the registers while crashing in an easier way.
+We used gdb to find the address of the beginning of the buffer (by looking at the address of the first byte of the input).
+Also using gdb, we can find the address where eip is pointing to (the address of eip when the program crashed).
+By substracting those two values we can find out what is the offset from the beginning of the buffer to the ra.
+Inside this offset we put our shellcode and in ra we put the address of the beginning of the buffer.
+I also used a small nop slide to make sure I am in the code and not missing anything.
+The shellcode was written in assembly, it was important not to write any 0's otherwise the strcat would stop cat'ing and the ra would not be overwritten.
+the shellcode is bassically: execve(/bin/sh, [/bin/sh, null], [null]) since this are the parameters needed to execve.
+to create 0's (or null) we used xor of a register with itself, and by doing that the shellcode did not contain 0's.
+After the shellcode we still had some space until the ra so it was padded with nop's.
+And finally the password that was inputed was: nop_slide + shellcode + nop_padding + address_of_beginning_of_buffer
+
+By using this we achieved root access.

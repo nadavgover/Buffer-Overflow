@@ -1,0 +1,10 @@
+The vulnerability in this code was using strcat with not matching sizes.
+Since the buffer length is 20, and 10 bytes are already full and that the password is also 10 bytes long,
+So we actually can get to the address buffer[20] (normally buffer[19] would be \0) and put there whatever we want.
+Using IDA and the sudo.c file we can see that the variable auth is right above the buffer on the stack.
+So if we overflow the buffer it actually overflows into auth.
+We can see that when auth is 1 the validation is returns true. 
+Since auth was already initialized to zero, if we change the last bit of it to 1, it will be 1.
+This would not work if auth was not initialized to zero because then the high bytes of auth (the bytes we don't have access to) will not be zero.
+So using this fact, we can put in the last byte of our password the value of 1. 
+And that will do the job.
